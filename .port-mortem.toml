@@ -1,0 +1,37 @@
+# Port Mortem manifest — portmortem/bytes-go
+
+[tool]             # do not remove or rename — recognized by port-mortem tooling
+name = "bytes-go"
+track = "F"        # JavaScript -> Go
+displayName = "bytes-go — Go port of bytes.js v3.1.2"
+
+[source]
+repo = "https://github.com/visionmedia/bytes.js"
+tag = "v3.1.2"
+license = "MIT"
+dependencies = "none"
+sha256 = "893fcbbbe962dc00e40dc2e4b20e76e92d874dd257345003c6575d940e91a37f"
+file = "tests/original/index.js"   # unedited upstream original, hashed at clone time
+tests = "tests/original/"          # upstream mocha suite, untouched
+
+[port]
+language = "go"
+stdlibOnly = true
+unsafeBlocks = 0
+entrypoint = "bytefmt.go"
+cli = "cmd/bytefmt"
+
+[validation]
+unitTests = "30/30 (original mocha suite ported 1:1)"
+differential = "73,224,270 vector checks, 0 divergences (65s run; corpus 10,017 vectors in fuzz/vectors.json)"
+log = "fuzz/log.txt"
+gen = "fuzz/gen/gen-vectors.js"
+
+[benchmark]
+npm = "node bench/bench-node.js 200000"
+go = "go run ./bench -n 200000"
+report = "bench/README.md"
+
+[bonuses]
+differentialFuzzSurvivor = true    # 60s+ continuous, zero divergences
+zeroUnsafe = true                  # 0 unsafe blocks, pure stdlib, checkptr clean
