@@ -9,9 +9,14 @@
 //	bytefmt --decimal-places 0 1536      → 2KB
 //	bytefmt --thousands-separator ',' 1000000 → 1,000,000B
 //	bytefmt --bench N             → format+parse N values, timing report
+//	bytefmt --bridge              → JSON-lines RPC bridge (used by the
+//	                                Node adapter to run the ORIGINAL mocha
+//	                                suite against this binary)
 package main
 
 import (
+	"bufio"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"math"
@@ -30,8 +35,15 @@ func main() {
 	thousandsSeparator := flag.String("thousands-separator", "", "thousands separator")
 	decimalPlaces := flag.Int("decimal-places", -1, "decimal places (-1 = default 2)")
 	fixedDecimals := flag.Bool("fixed", false, "keep trailing zeros")
+	unit := flag.String("unit", "", "force unit (kb/mb/gb/tb/pb)")
 	bench := flag.Int("bench", 0, "run benchmark over N random values (format+parse each)")
+	bridge := flag.Bool("bridge", false, "JSON-lines RPC bridge for the Node test adapter")
 	flag.Parse()
+
+	if *bridge {
+		runBridge()
+		return
+	}
 
 	if *bench > 0 {
 		runBench(*bench)
@@ -64,6 +76,7 @@ func main() {
 	opts.UnitSeparator = *unitSeparator
 	opts.ThousandsSeparator = *thousandsSeparator
 	opts.FixedDecimals = *fixedDecimals
+	opts.Unit = *unit
 	if *decimalPlaces >= 0 {
 		dp := *decimalPlaces
 		opts.DecimalPlaces = &dp
@@ -103,4 +116,105 @@ func runBench(n int) {
 	fmt.Printf("version: go port of bytes.js v3.1.2 (track F)\n")
 	fmt.Printf("unsafe blocks: 0\n")
 	_ = strings.Builder{}
+}
+
+// JSON-lines RPC bridge. One JSON object per line on stdin:
+//
+//	{"id":1,"op":"format","value":1024,"opts":{"decimalPlaces":2}}
+//	{"id":2,"op":"parse","value":"1.5KB"}
+//	{"id":3,"op":"bytes","value":1024}
+//
+// One JSON object per line on stdout:
+//
+//	{"id":1,"ok":true,"result":"1KB"}
+//	{"id":2,"ok":true,"result":1536}
+//	{"id":3,"ok":true,"result":"1KB"}
+//	{"id":4,"ok":false,"result":null}
+//
+// Used by tests/port/adapter.js so the ORIGINAL mocha suite (which does
+// require('..')) can be re-pointed at the Go binary via a thin adapter.
+type bridgeRequest struct {
+	ID   int            `json:"id"`
+	Op   string         `json:"op"`
+	Value any           `json:"value"`
+	Opts *bridgeOptions `json:"opts,omitempty"`
+}
+
+type bridgeOptions struct {
+	DecimalPlaces      *int   `json:"decimalPlaces,omitempty"`
+	FixedDecimals      bool   `json:"fixedDecimals,omitempty"`
+	ThousandsSeparator string `json:"thousandsSeparator,omitempty"`
+	UnitSeparator      string `json:"unitSeparator,omitempty"`
+	Unit               string `json:"unit,omitempty"`
+}
+
+type bridgeResponse struct {
+	ID     int    `json:"id"`
+	OK     bool   `json:"ok"`
+	Result any    `json:"result"`
+}
+
+func runBridge() {
+	sc := bufio.NewScanner(os.Stdin)
+	sc.Buffer(make([]byte, 1<<20), 1<<20)
+	enc := json.NewEncoder(os.Stdout)
+	for sc.Scan() {
+		line := strings.TrimSpace(sc.Text())
+		if line == "" {
+			continue
+		}
+		var req bridgeRequest
+		if err := json.Unmarshal([]byte(line), &req); err != nil {
+			_ = enc.Encode(bridgeResponse{ID: req.ID, OK: false, Result: nil})
+			continue
+		}
+		var opts bytefmt.Options
+		if req.Opts != nil {
+			opts.DecimalPlaces = req.Opts.DecimalPlaces
+			opts.FixedDecimals = req.Opts.FixedDecimals
+			opts.ThousandsSeparator = req.Opts.ThousandsSeparator
+			opts.UnitSeparator = req.Opts.UnitSeparator
+			opts.Unit = req.Opts.Unit
+		}
+		res := bridgeResponse{ID: req.ID}
+		switch req.Op {
+		case "format":
+			f, ok := asFloat(req.Value)
+			if !ok {
+				res.OK, res.Result = false, nil
+				break
+			}
+			s, ok := bytefmt.Format(f, &opts)
+			res.OK, res.Result = ok, s
+		case "parse":
+			// Mirror of the original: parse(number) returns the number itself.
+			if f, ok := asFloat(req.Value); ok {
+				res.OK, res.Result = true, f
+				break
+			}
+			s, ok := req.Value.(string)
+			if !ok {
+				res.OK, res.Result = false, nil
+				break
+			}
+			n, ok := bytefmt.Parse(s)
+			res.OK, res.Result = ok, n
+		case "bytes":
+			v, ok := bytefmt.Bytes(req.Value, &opts)
+			res.OK, res.Result = ok, v
+		default:
+			res.OK, res.Result = false, nil
+		}
+		_ = enc.Encode(res)
+	}
+}
+
+func asFloat(v any) (float64, bool) {
+	switch n := v.(type) {
+	case float64:
+		return n, true
+	case int:
+		return float64(n), true
+	}
+	return 0, false
 }

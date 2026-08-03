@@ -1,0 +1,41 @@
+
+
+  Test byte format function
+    ✔ Should return null if input is invalid
+    ✔ Should convert numbers < 1024 to `bytes` string
+    ✔ Should convert numbers >= 1 024 to kb string
+    ✔ Should convert numbers >= 1 048 576 to mb string
+    ✔ Should convert numbers >= (1 << 30) to gb string
+    ✔ Should convert numbers >= ((1 << 30) * 1024) to tb string
+    ✔ Should convert numbers >= 1 125 899 906 842 624 to pb string
+    ✔ Should return standard case (55ms)
+    ✔ Should support custom thousands separator (67ms)
+    ✔ Should support custom unit separator (50ms)
+    ✔ Should support custom number of decimal places (92ms)
+    ✔ Should support fixed decimal places
+    ✔ Should support floats
+    ✔ Should support custom unit (63ms)
+
+  Test byte parse function
+    ✔ Should return null if input is invalid
+    ✔ Should parse raw number
+    ✔ Should parse KB (125ms)
+    ✔ Should parse MB (42ms)
+    ✔ Should parse GB
+    ✔ Should parse TB (122ms)
+    ✔ Should parse PB (127ms)
+    ✔ Should assume bytes when no units (43ms)
+    ✔ Should accept negative values
+    ✔ Should drop partial bytes
+    ✔ Should allow whitespace
+
+  Test constructor
+    ✔ Expect a function
+    ✔ Should return null if input is invalid
+    ✔ Should be able to parse a string into a number
+    ✔ Should convert a number into a string
+    ✔ Should convert a number into a string with options
+
+
+  30 passing (1s)
+

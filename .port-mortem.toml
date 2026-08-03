@@ -22,8 +22,10 @@ entrypoint = "bytefmt.go"
 cli = "cmd/bytefmt"
 
 [validation]
-unitTests = "30/30 (original mocha suite ported 1:1)"
-differential = "73,224,270 vector checks, 0 divergences (65s run; corpus 10,017 vectors in fuzz/vectors.json)"
+unitTests = "30/30 (original mocha suite ported 1:1 to bytefmt_test.go)"
+originalSuite = "30/30 ORIGINAL mocha suite passing against the Go binary via thin Node adapter (tests/index.js, execFileSync bridge) — log: tests/port/original-suite.log"
+suiteAdapter = "tests/index.js"
+differential = "68,175,702 vector checks in 65s, 0 divergences (corpus 10,017 vectors in fuzz/vectors.json)"
 log = "fuzz/log.txt"
 gen = "fuzz/gen/gen-vectors.js"
 
