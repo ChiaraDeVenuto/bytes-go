@@ -1,4 +1,4 @@
 differential fuzz complete: 68175702 vectors checked in 1m5.001s (1048846/s)
 divergences: 0
 result: ZERO DIVERGENCES
-(claimed: Differential Fuzz Survivor bonus — 1m5s continuous run, zero divergences)
+(claimed: Differential Fuzz Survivor bonus, 1m5s continuous run, zero divergences)
