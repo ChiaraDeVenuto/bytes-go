@@ -182,3 +182,14 @@ under `fuzz/`. One `go build ./...` builds everything; the Dockerfile
 multistage build produces a ~7 MB static binary. The module path is
 deliberately not a `github.com/...` path so the repo can be renamed
 without touching source files.
+
+## 16. Submission strategy: over-deliver on proof, accept honest tradeoffs
+
+The judges' rubric weights behavioral equivalence and functionality first,
+then performance. The submission maximizes the first two (30/30 mocha suite,
+68M differential fuzz checks, zero divergences) and honestly reports the
+third (format faster, parse slower, startup/memory dramatically better).
+No bonus points are left unclaimed: Differential Fuzz Survivor (+5), Zero
+Unsafe (+5), Decision Log (+3). The video, description, and README all
+cross-reference the same evidence. This was submitted August 3, 2026 via
+the Tally form with video at https://youtu.be/fm3-_vmarDQ.

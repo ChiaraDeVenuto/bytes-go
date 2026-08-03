@@ -7,6 +7,10 @@ ECMAScript semantics of the original, including its quirks.
 
 **Port Mortem 2026 · Track F (JavaScript → Go).**
 
+> **Submitted:** August 3, 2026 · Team: ChiaraDev · Participant: @chiaradev
+> **Video:** https://youtu.be/fm3-_vmarDQ
+> **Repo:** https://github.com/ChiaraDeVenuto/bytes-go
+
 ## Why this matters
 
 `bytes.js` is one of the most-downloaded npm packages (~100M/week, zero
