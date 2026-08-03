@@ -1,8 +1,8 @@
-# Original bytes.js v3.1.2 — unedited upstream tree (hashed at clone time)
+# Original bytes.js v3.1.2 - unedited upstream tree (hashed at clone time)
 
-- `index.js` — the original module, byte-identical to
+- `index.js` - the original module, byte-identical to
   https://github.com/visionmedia/bytes.js@v3.1.2 (MIT).
-- `bytes.js`, `byte-format.js`, `byte-parse.js` — the upstream mocha
+- `bytes.js`, `byte-format.js`, `byte-parse.js` - the upstream mocha
   test suite shipping with the package, untouched.
 
 ```

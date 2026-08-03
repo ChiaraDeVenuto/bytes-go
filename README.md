@@ -1,8 +1,8 @@
-# bytes-go — Go port of `bytes.js` (v3.1.2)
+# bytes-go - Go port of `bytes.js` (v3.1.2)
 
 A dependency-free, behavior-identical port of
-[visionmedia/bytes.js](https://github.com/visionmedia/bytes.js) (MIT) —
-`bytes.format()` / `bytes.parse()` for byte sizes — with the exact
+[visionmedia/bytes.js](https://github.com/visionmedia/bytes.js) (MIT) - 
+`bytes.format()` / `bytes.parse()` for byte sizes - with the exact
 ECMAScript semantics of the original, including its quirks.
 
 **Port Mortem 2026 · Track F (JavaScript → Go).**
@@ -12,34 +12,34 @@ ECMAScript semantics of the original, including its quirks.
 `bytes.js` is one of the most-downloaded npm packages (~100M/week, zero
 dependencies). A Go port gives you the same API with:
 
-- **Startup**: ~0.00s vs 0.07s (Node) — >30x faster cold start
-- **Memory**: 2.9 MB RSS vs 44.4 MB (Node) — 15x lighter
+- **Startup**: ~0.00s vs 0.07s (Node) - >30x faster cold start
+- **Memory**: 2.9 MB RSS vs 44.4 MB (Node) - 15x lighter
 - **format**: 584 ns/op vs 750 ns/op (-22%)
 - **Zero unsafe blocks, zero dependencies, static binary ~7 MB**
 
-## Behavioral equivalence — how it is proven
+## Behavioral equivalence - how it is proven
 
 1. **Original test suite**: the untouched mocha tests (30 tests) ported
-   1:1 to `bytefmt_test.go` — **30/30 pass**.
+   1:1 to `bytefmt_test.go` - **30/30 pass**.
 2. **Differential fuzzing**: 10,017 frozen vectors generated against the
    *original* Node module (valid + invalid inputs, all `Options` knobs,
    edge cases: `0x11`, `1e3`, `-0`, tabs, NaN, 2^52+ values) replayed
-   against the port — **zero divergences**. The 60s+ continuous run
+   against the port - **zero divergences**. The 60s+ continuous run
    checked **73,224,270 vectors** (1,126,418/s), log in `fuzz/log.txt`.
 
 ## Layout
 
 ```
-bytefmt.go          — the entire port (library root)
-bytefmt_test.go     — 26 unit tests (1:1 from original mocha suite)
-regression_test.go  — differential regression corpus from fuzzing
-DECISIONS.md        — 15 documented port decisions
-bench/              — benchmark runners (Node + Go) + report
-fuzz/               — differential fuzz harness + frozen corpus
-fuzz/gen/           — corpus generator (runs against ORIGINAL via Node)
-cmd/bytefmt/        — CLI mirroring the full API
-tests/original/     — original bytes.js sources + mocha suite (untouched)
-Dockerfile          — multistage build → static binary
+bytefmt.go          - the entire port (library root)
+bytefmt_test.go     - 26 unit tests (1:1 from original mocha suite)
+regression_test.go  - differential regression corpus from fuzzing
+DECISIONS.md        - 15 documented port decisions
+bench/              - benchmark runners (Node + Go) + report
+fuzz/               - differential fuzz harness + frozen corpus
+fuzz/gen/           - corpus generator (runs against ORIGINAL via Node)
+cmd/bytefmt/        - CLI mirroring the full API
+tests/original/     - original bytes.js sources + mocha suite (untouched)
+Dockerfile          - multistage build → static binary
 ```
 
 ## API
@@ -119,19 +119,19 @@ Details and honest methodology in `bench/README.md`.
 ## License
 
 Port: MIT (see LICENSE). Original bytes.js: MIT, Copyright © TJ Holowaychuk
-and contributors — behavior and test suite ported with attribution.
+and contributors - behavior and test suite ported with attribution.
 
 ## AI assistance disclosure
 
 This port was **created with AI assistance** (vibe-coded with a local AI
 coding agent during the 72-hour Port Mortem 2026 hackathon). Per the event
 rules, AI tools are expected and the standard is only that the artifact
-holds up — which is independently verified here:
+holds up - which is independently verified here:
 
 - Behavioral equivalence is proven by the untouched mocha suite (30/30,
   `tests/port/original-suite.log`), not by the code tooling used.
 - The differential fuzz harness (`fuzz/`) replays a frozen corpus generated
-  against the *original* Node module — AI cannot bias the oracle.
+  against the *original* Node module - AI cannot bias the oracle.
 - Every non-trivial divergence from the original is documented in
   `DECISIONS.md`, including the parts that took several hours to get right
   (ECMAScript `toFixed` semantics past 2^52).

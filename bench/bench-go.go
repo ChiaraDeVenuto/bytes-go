@@ -1,4 +1,4 @@
-// Benchmark runner for the Go port — same deterministic inputs as bench-node.js.
+// Benchmark runner for the Go port - same deterministic inputs as bench-node.js.
 // Usage: go run ./bench [-n N]
 package main
 

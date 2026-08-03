@@ -1,4 +1,4 @@
-// Differential fuzz harness — Port Mortem 2026, Track F.
+// Differential fuzz harness - Port Mortem 2026, Track F.
 //
 // Approach: generate a large corpus of randomized inputs (both valid and
 // invalid), run the ORIGINAL bytes.js through Node to produce expected
@@ -8,7 +8,7 @@
 //
 // Run: go run ./fuzz [-duration 60s] (reads fuzz/vectors.json,
 // verifies every vector; with -duration it loops until the time budget
-// is exhausted — this is the "60s+ continuous run" used for the
+// is exhausted - this is the "60s+ continuous run" used for the
 // Differential Fuzz Survivor bonus claim)
 package main
 
@@ -88,7 +88,7 @@ func main() {
 	fmt.Printf("result: %s\n", map[bool]string{true: "ZERO DIVERGENCES", false: "DIVERGENCES FOUND"}[divergences == 0])
 	if *duration > 0 {
 		if divergences == 0 {
-			fmt.Printf("(claimed: Differential Fuzz Survivor bonus — %s continuous run, zero divergences)\n", duration)
+			fmt.Printf("(claimed: Differential Fuzz Survivor bonus - %s continuous run, zero divergences)\n", duration)
 		}
 	} else if divergences == 0 {
 		fmt.Printf("(single-pass corpus replay: %d frozen vectors, zero divergences)\n", len(vectors))

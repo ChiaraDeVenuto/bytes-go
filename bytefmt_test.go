@@ -8,7 +8,7 @@ import (
 func dp(v int) *int { return &v }
 
 // ---------------------------------------------------------------------------
-// Test byte format function — translated 1:1 from test/byte-format.js
+// Test byte format function - translated 1:1 from test/byte-format.js
 // ---------------------------------------------------------------------------
 
 func TestFormatInvalidInputs(t *testing.T) {
@@ -254,7 +254,7 @@ func TestFormatCustomUnit(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// Test byte parse function — translated 1:1 from test/byte-parse.js
+// Test byte parse function - translated 1:1 from test/byte-parse.js
 // ---------------------------------------------------------------------------
 
 func TestParseInvalidInputs(t *testing.T) {
@@ -400,11 +400,11 @@ func TestParseAllowWhitespace(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// Test constructor/dispatcher — translated 1:1 from test/bytes.js
+// Test constructor/dispatcher - translated 1:1 from test/bytes.js
 // ---------------------------------------------------------------------------
 
 func TestBytesFunctionExists(t *testing.T) {
-	// JS: typeof bytes === 'function' — dispatcher exists and is callable.
+	// JS: typeof bytes === 'function' - dispatcher exists and is callable.
 	if _, ok := Bytes("1KB", nil); !ok {
 		t.Error("Bytes dispatcher should be callable")
 	}

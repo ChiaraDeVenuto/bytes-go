@@ -1,4 +1,4 @@
-// Benchmark runner for the ORIGINAL bytes.js (Node) — port-mortem bench.
+// Benchmark runner for the ORIGINAL bytes.js (Node) - port-mortem bench.
 // Usage: node bench/bench-node.js [N]
 'use strict';
 const bytes = require('../../bytes-original/index.js');

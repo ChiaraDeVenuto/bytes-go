@@ -1,4 +1,4 @@
-# Benchmark — original bytes.js (Node) vs Go port
+# Benchmark - original bytes.js (Node) vs Go port
 
 Port Mortem 2026 · Track F. All numbers measured on the same machine,
 same deterministic inputs (LCG seed 42), identical workload.
@@ -6,8 +6,8 @@ same deterministic inputs (LCG seed 42), identical workload.
 ## Methodology
 
 - **Workload**: 200,000 values per operation.
-  - `format`: `bytes.format(rnd() * 1e15)` — full dynamic range, auto unit selection.
-  - `parse`: `bytes.parse("<%.2f>B|KB|MB|GB|TB|PB")` — valid parse with unit.
+  - `format`: `bytes.format(rnd() * 1e15)` - full dynamic range, auto unit selection.
+  - `parse`: `bytes.parse("<%.2f>B|KB|MB|GB|TB|PB")` - valid parse with unit.
 - **Determinism**: both runners use the same LCG (seed 42); inputs are
   generated inline, no I/O on the hot path.
 - **Runners**:
@@ -50,7 +50,7 @@ total:  257.066729ms
 - **parse is slower in Go** (+97%): V8's native regexp is extremely fast
   at this microbenchmark; Go's RE2 was ~3.5x slower, and even the
   hand-written matcher (decision 5 in DECISIONS.md) does not close the
-  gap. The original parse regex was replicated exactly — this is a
+  gap. The original parse regex was replicated exactly - this is a
   deliberate behavior-equivalence tradeoff, not a missed optimization.
 - **Startup and memory win decisively**: 0.00s vs 0.07s, 2.9 MB vs
   44.4 MB. For CLI/embedded/serverless use (the realistic deployment of a

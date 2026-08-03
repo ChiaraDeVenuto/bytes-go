@@ -134,10 +134,10 @@ func runBench(n int) {
 // Used by tests/port/adapter.js so the ORIGINAL mocha suite (which does
 // require('..')) can be re-pointed at the Go binary via a thin adapter.
 type bridgeRequest struct {
-	ID   int            `json:"id"`
-	Op   string         `json:"op"`
-	Value any           `json:"value"`
-	Opts *bridgeOptions `json:"opts,omitempty"`
+	ID    int            `json:"id"`
+	Op    string         `json:"op"`
+	Value any            `json:"value"`
+	Opts  *bridgeOptions `json:"opts,omitempty"`
 }
 
 type bridgeOptions struct {
@@ -149,9 +149,9 @@ type bridgeOptions struct {
 }
 
 type bridgeResponse struct {
-	ID     int    `json:"id"`
-	OK     bool   `json:"ok"`
-	Result any    `json:"result"`
+	ID     int  `json:"id"`
+	OK     bool `json:"ok"`
+	Result any  `json:"result"`
 }
 
 func runBridge() {

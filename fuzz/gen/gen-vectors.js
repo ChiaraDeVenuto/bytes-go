@@ -1,4 +1,4 @@
-// Vector generator — runs the ORIGINAL bytes.js through Node and emits
+// Vector generator - runs the ORIGINAL bytes.js through Node and emits
 // expected outputs for a randomized corpus. The Go port is then checked
 // against these vectors (differential fuzzing, frozen oracle).
 'use strict';

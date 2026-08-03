@@ -1,4 +1,4 @@
-# Decision Log — Go port of `bytes.js` (v3.1.2)
+# Decision Log - Go port of `bytes.js` (v3.1.2)
 
 Port Mortem 2026 · Track F (JavaScript → Go) · `portmortem/bytes-go`
 
@@ -11,7 +11,7 @@ oracle: 30/30 original mocha tests + a differential fuzz corpus of
 > **AI assistance:** this port was created with AI assistance (local AI
 > coding agent, per event rules which expect AI tooling). The AI generated
 > code; the oracle, fuzz corpus, test suite and this document are the
-> receipts that the port actually behaves like the original — the AI
+> receipts that the port actually behaves like the original - the AI
 > cannot bias evidence generated against the untouched Node module.
 
 ---
@@ -31,7 +31,7 @@ the other way around.
 and the exported `bytes()` dispatcher returns `null` for unsupported
 types. Go has no `null`. Options considered:
 
-- `*float64` / `interface{}` — allocates, hides errors, invites nil bugs.
+- `*float64` / `interface{}` - allocates, hides errors, invites nil bugs.
 - **Chosen: `(float64, bool)`** for `Parse`, `(string, bool)` for `Format`,
   `(any, bool)` for `Bytes`. The bool is the `null` bit; callers are forced
   to handle the failure case, which the JS original silently ignores
@@ -55,7 +55,7 @@ three distinct ways discovered via fuzzing:
    instead of `632`).
 2. **Ties and negatives**: V8 rounds half-away-from-zero on the absolute
    value (`(-2.5).toFixed(0) === "-3"`), while `floor(x+0.5)` gives `-2`.
-3. **Sign of zero**: `(-3.7e-12).toFixed(2) === "-0.00"` — the sign of the
+3. **Sign of zero**: `(-3.7e-12).toFixed(2) === "-0.00"` - the sign of the
    input is preserved even when the rounded result is zero, which Go's
    `strconv` drops.
 
@@ -64,7 +64,7 @@ three distinct ways discovered via fuzzing:
 result is an integer), computed on the absolute value, with the input's
 sign re-applied. Beyond `2^52` float64 halfway values are not
 representable at all, so a `math/big.Rat` path rounds the exact rational
-value of the double — the only faithful way to match V8 there
+value of the double - the only faithful way to match V8 there
 (see decision 4).
 
 ## 4. Beyond 2^52, exact rational arithmetic instead of float hacks
@@ -76,15 +76,15 @@ round the *stored* value instead of the *true* value. `math/big.Rat`
 (`SetFloat64` + multiply by `10^n` + `floor(x+1/2)`) computes the ECMAScript
 definition exactly ("the integer for which n/10^f is closest, ties to the
 larger"). This is the only code path that ever allocates, and it is
-reached only for values beyond 2^52 — invisible on the benchmark.
+reached only for values beyond 2^52 - invisible on the benchmark.
 
 ## 5. String parse: hand-written matcher instead of regexp
 
 The original parses with `/^((-|\+)?(\d+(?:\.\d+)?)) *(kb|mb|gb|tb|pb)$/i`.
 Go's `regexp` (RE2) was ~3.5x slower than V8's native regex on the parse
 hot path (1260 ns/op vs 355 ns/op). A hand-written matcher replicates the
-regex exactly — same grammar, same single-space-only separator semantics,
-same case-insensitive unit list, same `$` anchor — at 702 ns/op. The regex
+regex exactly - same grammar, same single-space-only separator semantics,
+same case-insensitive unit list, same `$` anchor - at 702 ns/op. The regex
 is kept in the source as a living spec comment and used nowhere else.
 Correctness was proven by the fuzz corpus (parse vectors include edge
 cases: `'1.5KB'`, `' 1kb'`, `'1.5 kb'`, `'0x11'`, `'1e3'`, tabs, empty
@@ -95,7 +95,7 @@ strings).
 When the regex does not match, `bytes.js` falls back to
 `parseInt(val, 10)`: leading whitespace is skipped (JS whitespace set,
 not just `' '`), optional sign, then the longest leading run of decimal
-digits, NaN otherwise — importantly **without** matching `'0x11'` as hex
+digits, NaN otherwise - importantly **without** matching `'0x11'` as hex
 (base is forced to 10). Go's `strconv.ParseInt` does not share this
 semantics (it rejects `'1.5'` while JS `parseInt('1.5kb') === 1`), so a
 small `jsParseInt` replicates the ECMAScript algorithm directly.
@@ -135,12 +135,12 @@ integer portion only: `1234567.89` with `','` becomes `1,234,567.89`, not
 `1,234,567.8,9`. The port splits at the decimal point and inserts
 separators left-to-right on the integer part (no recursion, no allocation
 in the common case). The separator itself is arbitrary (`,` `.` ` ` `_`
-all appear in the fuzz corpus) — the port must not assume ASCII digits or
+all appear in the fuzz corpus) - the port must not assume ASCII digits or
 a particular separator character.
 
 ## 11. Zero unsafe blocks: pure standard-library port
 
-No `unsafe`, no `cgo`, no reflection, no third-party dependencies —
+No `unsafe`, no `cgo`, no reflection, no third-party dependencies - 
 `go.mod` requires nothing beyond the standard library (Go 1.26.5).
 The port compiles with `-gcflags=all=-d=checkptr=2` and
 `GODEBUG`-level pointer checks clean. This is both a quality property

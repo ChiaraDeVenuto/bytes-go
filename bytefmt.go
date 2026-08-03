@@ -1,6 +1,6 @@
 // Package bytefmt is a Go port of visionmedia/bytes.js v3.1.2 (MIT).
 //
-// Port Mortem 2026 — Code Resurrection Hackathon, Track F (JavaScript → Go).
+// Port Mortem 2026 - Code Resurrection Hackathon, Track F (JavaScript → Go).
 // Behavioral parity target: the original test suite, translated 1:1.
 package bytefmt
 
@@ -42,7 +42,7 @@ var unitMap = map[string]float64{
 //
 // It is kept for reference and classification; parseString performs the
 // same matching without regexp overhead (regexp matching is ~3.5x slower
-// than the V8 regex engine, so the hot path avoids it — see DECISIONS.md).
+// than the V8 regex engine, so the hot path avoids it - see DECISIONS.md).
 var parseRegExp = regexp.MustCompile(`(?i)^((-|\+)?(\d+(?:\.\d+)?)) *(kb|mb|gb|tb|pb)$`)
 
 // Format converts a byte count into a human-readable string.
@@ -115,7 +115,7 @@ func Parse(input any) (float64, bool) {
 	case string:
 		floatValue, unit, matched := parseString(v)
 		if !matched {
-			// JS: parseInt(val, 10) — leading integer part only, base 10.
+			// JS: parseInt(val, 10) - leading integer part only, base 10.
 			floatValue = jsParseInt(v)
 			unit = "b"
 		}
@@ -224,7 +224,7 @@ func toFixedBig(val float64, places int) string {
 	rat := new(big.Rat).SetFloat64(av)
 	scaleRat := new(big.Rat).SetInt(new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(places)), nil))
 	rat.Mul(rat, scaleRat)
-	// n = floor(rat + 1/2) — rat >= 0, so truncation is floor.
+	// n = floor(rat + 1/2) - rat >= 0, so truncation is floor.
 	rat.Add(rat, big.NewRat(1, 2))
 	q := new(big.Int).Quo(rat.Num(), rat.Denom())
 
@@ -248,7 +248,7 @@ func toFixedBig(val float64, places int) string {
 // /(?:\.0*|(\.[^0]+)0+)$/ replacement:
 //   - a decimal part made of zeros only (".00", ".000") vanishes entirely;
 //   - trailing zeros are dropped only when the decimal part matches
-//     [^0]+0*$ — a run of non-zero digits followed by zeros — so
+//     [^0]+0*$ - a run of non-zero digits followed by zeros - so
 //     "1.50" -> "1.5" but "6.4010" and "1.050" are left untouched.
 func trimDecimals(s string) string {
 	i := strings.IndexByte(s, '.')
@@ -256,11 +256,11 @@ func trimDecimals(s string) string {
 		return s
 	}
 	frac := s[i+1:]
-	// (?:\.0*)$ — decimals are all zeros (or empty)
+	// (?:\.0*)$ - decimals are all zeros (or empty)
 	if strings.Trim(frac, "0") == "" {
 		return s[:i]
 	}
-	// (\.[^0]+)0+$ — trailing zeros are removable only when no zero
+	// (\.[^0]+)0+$ - trailing zeros are removable only when no zero
 	// appears between the point and the final run of zeros.
 	j := len(s)
 	for j > i+1 && s[j-1] == '0' {
@@ -342,7 +342,7 @@ func parseString(s string) (float64, string, bool) {
 		numberEnd = i
 	}
 
-	//  * (single space character, zero or more — matching the original regex)
+	//  * (single space character, zero or more - matching the original regex)
 	spaceEnd := i
 	for i < n && s[i] == ' ' {
 		i++

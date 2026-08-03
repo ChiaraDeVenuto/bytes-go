@@ -5,7 +5,7 @@
 // to this file. Every call is forwarded synchronously to the Go binary via
 // `execFileSync`; the Go side does the actual work.
 //
-// The adapter touches NOTHING in tests/original/ — the hashed suite runs
+// The adapter touches NOTHING in tests/original/ - the hashed suite runs
 // as-is. This is the "thin adapter" the Port Mortem rules describe for
 // running the original test suite against the port's artifact.
 //
@@ -54,7 +54,7 @@ function format(value, opts) {
   return out === 'null' ? null : out;
 }
 
-// bytes(value, options) — dispatcher
+// bytes(value, options) - dispatcher
 function bytes(value, opts) {
   if (typeof value === 'string') return parse(value);
   if (typeof value === 'number' && isFinite(value)) return format(value, opts);
