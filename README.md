@@ -120,3 +120,23 @@ Details and honest methodology in `bench/README.md`.
 
 Port: MIT (see LICENSE). Original bytes.js: MIT, Copyright © TJ Holowaychuk
 and contributors — behavior and test suite ported with attribution.
+
+## AI assistance disclosure
+
+This port was **created with AI assistance** (vibe-coded with a local AI
+coding agent during the 72-hour Port Mortem 2026 hackathon). Per the event
+rules, AI tools are expected and the standard is only that the artifact
+holds up — which is independently verified here:
+
+- Behavioral equivalence is proven by the untouched mocha suite (30/30,
+  `tests/port/original-suite.log`), not by the code tooling used.
+- The differential fuzz harness (`fuzz/`) replays a frozen corpus generated
+  against the *original* Node module — AI cannot bias the oracle.
+- Every non-trivial divergence from the original is documented in
+  `DECISIONS.md`, including the parts that took several hours to get right
+  (ECMAScript `toFixed` semantics past 2^52).
+- All code is human-readable, idiomatic Go, stdlib-only, zero unsafe blocks.
+
+The AI assisted with code *generation*; correctness, proof strategy, and
+documentation are the author's responsibility and are evidenced by the
+test logs, fuzz log, and benchmark methodology committed in this repo.

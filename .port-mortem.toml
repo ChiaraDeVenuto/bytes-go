@@ -37,3 +37,7 @@ report = "bench/README.md"
 [bonuses]
 differentialFuzzSurvivor = true    # 60s+ continuous, zero divergences
 zeroUnsafe = true                  # 0 unsafe blocks, pure stdlib, checkptr clean
+
+[disclosure]
+aiAssistance = true                # AI-assisted port (vibe-coded with local AI agent)
+note = "AI generated code; correctness proven by untouched mocha suite + differential fuzz against the original Node oracle (see README AI assistance disclosure)"

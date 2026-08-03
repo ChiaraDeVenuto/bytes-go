@@ -8,6 +8,12 @@ evidence that drove it. All decisions were validated against the Node.js
 oracle: 30/30 original mocha tests + a differential fuzz corpus of
 **73,224,270 vector checks (65s run) with zero divergences**.
 
+> **AI assistance:** this port was created with AI assistance (local AI
+> coding agent, per event rules which expect AI tooling). The AI generated
+> code; the oracle, fuzz corpus, test suite and this document are the
+> receipts that the port actually behaves like the original — the AI
+> cannot bias evidence generated against the untouched Node module.
+
 ---
 
 ## 1. Keep the original source byte-identical; never edit it
